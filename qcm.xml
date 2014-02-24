@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet href="formulaire.xsl" type="text/xsl" ?>
+
+<qcm matiere="champignons">
+
+  <question libellee="1 - Parmi ces amanites, quelle est celle qui est comestible" difficulte="facile">    
+    <choix score="-5"> l'amanite phalloide </choix>
+    <choix score="-2"> l'amanitetue-mouche </choix>
+    <choix score="5"> l'amanite des César </choix>
+  </question>
+
+  <question libellee="2 - Parmie ces bolets, que est celui qui est toxique " difficulte="Difficile">
+
+    <choix score="-5"> le bolet des pins </choix>
+    <choix score="5"> le bolet satan </choix>
+    <choix score="1"> le bolet blafard </choix>
+    <choix score="-5"> le bolet de Bordeaux </choix>
+  </question>
+
+</qcm>
