@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet href="formulaire.xsl" type="text/xsl" ?>
+
+<campus nom="UM2" >
+  <faculte nom="Science Exacte" x="" y="">
+    <departement nom ="Informatique" x="" y="">
+
+      <batiment type="administratif" num="16" x="" y="">
+        <salle nom="Secretariat" num="" x="" y="">
+        </salle>
+
+      </batiment>
+
+      <batiment type="cours" num="5" x="" y="">
+        <salle type="Amphi" num="" x="" y="">
+        </salle>
+
+        <salle type="salle" num="" x="" y="">
+        </salle>
+      </batiment>
+
+      <batiment type="TP/TD" num="" x="" y="">
+        <salle type="Travaux Pratique" num="" x="" y="">
+        </salle>
+
+        <salle type="Travaux Dirigés" num="" x="" y="">
+        </salle>
+
+      </batiment>
+      
+      </departement>
+
+      <departement nom="Mathématique Informatique" x="" y="">
+
+
+      <batiment type="administratif" num="16" x="" y="">
+        <salle nom="Secretariat" num="" x="" y="">
+        </salle>
+
+      </batiment>
+
+      <batiment type="cours" num="5" x="" y="">
+        <salle type="Amphi" num="" x="" y="">
+        </salle>
+
+        <salle type="salle" num="" x="" y="">
+        </salle>
+        .
+        .
+      </batiment>
+
+      <batiment type="TP/TD" num="" x="" y="">
+        <salle type="Travaux Pratique" num="" x="" y="">
+        </salle>
+
+        <salle type="Travaux Dirigés" num="" x="" y="">
+        </salle>
+
+      </batiment>
+
+    </departement>
+  </faculte>
+</campus>

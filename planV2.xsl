@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+    
+<xsl:output method="xml" />
+
+<xsl:template match="/">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:dyn="http://exslt.org/dynamic"
+         extension-element-prefixes="dyn"
+         width="1000" height="1000">
+    
+        <xsl:variable name="xpath">
+            <xsl:call-template name="analyse">
+                <xsl:with-param name="criteres" select="concat($criteres,'&amp;')"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <!-- xsl:value-of select="concat('/',$xpath)" / -->
+
+        <image xlink:href="assets/img/plan.jpg" x="0" y="0" width="1000" height="1000" />
+        
+       <!-- rect x="0" y="0" width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" / -->
+           out of for each
+       <xsl:for-each select="dyn:evaluate($xpath)">
+           in for each !
+           <rect x="{@x}" y="{@y}" width="30" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+       </xsl:for-each>
+       
+       <rect x="0" y="0" width="10" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+    
+    </svg>
+</xsl:template>
 
 
   <xsl:param name="criteres" />
-
-  <xsl:template match="/"> 
-
-    <xsl:variable name="xpath">
-      <xsl:call-template name="analyse">
-        <xsl:with-param name="criteres" select="concat($criteres,'&amp;') " />
-        <xsl:with-param name="memoireBalise" select=" '' " />
-      </xsl:call-template>    
-    </xsl:variable>
-    <xsl:value-of select="concat('/',$xpath)"/>
-  </xsl:template>
-
 
   <xsl:template name="analyse">
     <xsl:param name="criteres"/>

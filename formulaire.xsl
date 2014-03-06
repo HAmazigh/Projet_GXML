@@ -6,7 +6,7 @@
       <head><title>Page de Formulaire</title></head> 
       <body>
         <h3> Formulaire de Recherche </h3>
-        <form action="http://localhost/GalaxieXml/qcm_TP1/relais.php" method="GET"> 
+        <form action="relais.php" method="GET"> 
             <xsl:apply-templates select="//*" />
           <br/>
           <input type="submit"  value="Visualiser"/>
