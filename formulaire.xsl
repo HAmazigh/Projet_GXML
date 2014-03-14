@@ -32,7 +32,13 @@
 </xsl:template>
 
 <xsl:template match="@*"> 
-  <option> <xsl:value-of select="." /> </option>
+  <option>
+    <xsl:variable name="attActuel" select=".">
+      <xsl:if test="preceding::node()[name()=$attActuel]">
+        <xsl:value-of select="." /> </option>
+    </xsl:if>
+  </xsl:variable>
+
   </xsl:template> 
 
 <xsl:template match="*"> 
