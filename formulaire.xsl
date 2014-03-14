@@ -31,14 +31,9 @@
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="@*"> 
+<xsl:template match="@*[not(preceding::*/@*[.=current()])]"> 
   <option>
-    <xsl:variable name="attActuel" select=".">
-      <xsl:if test="preceding::node()[name()=$attActuel]">
         <xsl:value-of select="." /> </option>
-    </xsl:if>
-  </xsl:variable>
-
   </xsl:template> 
 
 <xsl:template match="*"> 
