@@ -16,21 +16,33 @@
             </xsl:call-template>
         </xsl:variable>
         
-        <!-- xsl:value-of select="concat('/',$xpath)" / -->
+         <xsl:value-of select="concat('/',$xpath)" />
 
-        <image xlink:href="assets/img/plan.jpg" x="0" y="0" width="1000" height="1000" />
+        <image xlink:href="assets/img/plan_2.png" x="0" y="0" width="500" height="500" />
         
        <!-- rect x="0" y="0" width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" / -->
            out of for each
-       <xsl:for-each select="dyn:evaluate($xpath)">
-           in for each !
-           <rect x="{@x}" y="{@y}" width="30" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-       </xsl:for-each>
+           <xsl:choose>
+           <xsl:when test="dyn:evaluate($xpath)">
+			          <xsl:for-each select="dyn:evaluate($xpath)">  je suis dans le corps de evaluate
+						</xsl:for-each>
+			</xsl:when>
+			
+			<xsl:otherwise>
+			<xsl:message terminate="yes">Unsupported XSLT processor.</xsl:message>
+			</xsl:otherwise>
+			</xsl:when>
+			
+			</xsl:choose>
+           <!-- <rect x="{@x}" y="{@y}" width="30" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /> -->
+ 
        
        <rect x="0" y="0" width="10" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
     
     </svg>
+    
 </xsl:template>
+
 
 
   <xsl:param name="criteres" />
