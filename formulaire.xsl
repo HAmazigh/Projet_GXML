@@ -6,7 +6,7 @@
       <head><title>Page de Formulaire</title></head> 
       <body>
         <form action="relais.php" method="GET"> 
-            <xsl:apply-templates select="//*" />
+          <xsl:apply-templates select="//*" />
           <br/>
           <input type="submit"  value="Visualiser"/>
         </form>
@@ -27,21 +27,20 @@
         <xsl:apply-templates select="//*[name()=$balise]/@*[name()=$attribut]" />
       </select>
       <br/>
-  </xsl:for-each>
-</xsl:template>
+    </xsl:for-each>
+  </xsl:template>
 
-<<<<<<< HEAD
-<xsl:template match="@*"> 
-  <option> <xsl:value-of select="." /> </option>
-=======
-<xsl:template match="@*[not(preceding::*/@*[.=current()])]"> 
-  <option>
-        <xsl:value-of select="." /> </option>
->>>>>>> 3c8a095c8f17a609dda3836a0cd9c19daa2c9edf
+
+
+  <xsl:template match="@*[not(preceding::*/@*[.=current()])]"> 
+    <option>
+      <xsl:value-of select="." /> </option>
   </xsl:template> 
 
-<xsl:template match="*"> 
+  <xsl:template match="*"> 
   </xsl:template> 
+
+</xsl:template> 
 
 
 </xsl:stylesheet>
