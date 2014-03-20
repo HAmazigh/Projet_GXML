@@ -30,8 +30,14 @@
   </xsl:for-each>
 </xsl:template>
 
+<<<<<<< HEAD
 <xsl:template match="@*"> 
   <option> <xsl:value-of select="." /> </option>
+=======
+<xsl:template match="@*[not(preceding::*/@*[.=current()])]"> 
+  <option>
+        <xsl:value-of select="." /> </option>
+>>>>>>> 3c8a095c8f17a609dda3836a0cd9c19daa2c9edf
   </xsl:template> 
 
 <xsl:template match="*"> 
