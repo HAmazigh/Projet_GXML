@@ -20,6 +20,9 @@
 
         <image xlink:href="assets/img/plan.jpg" x="0" y="0" width="1000" height="1000" />
         
+        
+        <xsl:value-of select="$xpath" />
+        
        <!-- rect x="0" y="0" width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" / -->
            out of for each
        <xsl:for-each select="dyn:evaluate($xpath)">

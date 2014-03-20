@@ -5,7 +5,6 @@
     <html>
       <head><title>Page de Formulaire</title></head> 
       <body>
-        <h3> Formulaire de Recherche </h3>
         <form action="relais.php" method="GET"> 
             <xsl:apply-templates select="//*" />
           <br/>
@@ -32,13 +31,7 @@
 </xsl:template>
 
 <xsl:template match="@*"> 
-  <option>
-    <xsl:variable name="attActuel" select=".">
-      <xsl:if test="preceding::node()[name()=$attActuel]">
-        <xsl:value-of select="." /> </option>
-    </xsl:if>
-  </xsl:variable>
-
+  <option> <xsl:value-of select="." /> </option>
   </xsl:template> 
 
 <xsl:template match="*"> 
