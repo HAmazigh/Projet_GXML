@@ -41,24 +41,24 @@
             <h3> Formulaire </h3>
             
             <div id="menu-accord">
-                <h3>Textures intern</h3>
+                <h3>Objets localisés</h3>
                 <div>
                     <img class="flot-l" src="../assets/img/tex1.JPG" width="62" height="62" >
                     <img class="flot-l" src="../assets/img/tex2.JPG" width="62" height="62" >
                     <img class="flot-l" src="../assets/img/tex3.JPG" width="62" height="62" >
                 </div>
                 
-                <h3>Textures extern</h3>
+                <h3>Meubles</h3>
                 <div>
-                    <img class="flot-l" src="../assets/img/tex1.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex2.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex3.JPG" width="62" height="62" >
+                    <a href="#"><img class="meubleListener flot-l" id="tex1" src="../assets/img/tex1.JPG" width="62" height="62" ></a>
+                    <a href="#"><img class="meubleListener flot-l" id="tex2" src="../assets/img/tex2.JPG" width="62" height="62" ></a>
+                    <a href="#"><img class="meubleListener flot-l" id="tex3" src="../assets/img/tex3.JPG" width="62" height="62" ></a>
                 </div>
             </div>    
             <div id="search" >
                 <h3>Formulaire de recherche</h3>
                 <div>
-                    <iframe src="http://localhost/XSL/Projet/donnee.xml"></iframe>
+                    <iframe src="http://localhost/XSL/Projet/donnee.old.xml"></iframe>
                 </div>
             </div>
         </div>
@@ -105,10 +105,10 @@
             scene.selectAll("circle")
                 .data(dataset)
                 .enter().append("circle")
-                .style("stroke", "grey")
+                .style("stroke", "gray")
                 .style("fill", "white")
                 .attr("r", _r)
-                .attr("cx", function(d, i){return d.x*dx + _r })
+                .attr("cx", function(d, i){return d.x*dx + _r})
                 .attr("cy", function(d, i){ return d.y*dy + _r})
                 .attr("class", 'point')
                 .on("mouseover", function(){d3.select(this).style("fill", "red");})
@@ -158,6 +158,12 @@
             
             $(function() {
                 $( "#menu-accord" ).accordion();
+                
+                $('a .meubleListener').click(function(e){
+                    e.preventDefault()
+                    var idMeuble = $(this).attr('id')
+                    console.log(' clic sur '+idMeuble);
+                });
             });
 
         </script>
