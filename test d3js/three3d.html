@@ -30,7 +30,7 @@
             var scene = new THREE.Scene;
             // le cube  (mur)
             var cubeGeo = new THREE.CubeGeometry(200, 70, 10);
-            var cubeTexture = THREE.ImageUtils.loadTexture('../assets/img/tex2.');
+            var cubeTexture = THREE.ImageUtils.loadTexture('../assets/img/tex2.JPG');
             var cubeMaterial = new THREE.MeshNormalMaterial();
             var cube = new THREE.Mesh(cubeGeo, cubeMaterial);
             
@@ -48,8 +48,18 @@
             
             // Show!
             camera.lookAt(cube.position);
-            renderer.render(scene, camera);
+              animate();
             
+          
+            //fonction pour faire bouger l'objet
+            function animate(){
+				requestAnimationFrame (animate);
+				cube.rotation.y += 0.009;
+				renderer.render(scene, camera);
+				
+			}
+			
+			
         </script>
     </body>
 </html>

@@ -18,29 +18,19 @@
         
          <xsl:value-of select="concat('/',$xpath)" />
 
-        <image xlink:href="assets/img/plan_2.png" x="0" y="0" width="500" height="500" />
-        
-        
+        <image xlink:href="assets/img/plan_2.png" x="0" y="0" width="100" height="500" />
         <xsl:value-of select="$xpath" />
         
+        <xsl:for-each select="dyn:evaluate($xpath)">
+			je suis dans la boucle de evaluate
+                <rect x="{@x}" y="{@y}" width="10" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+            </xsl:for-each>
+            je suis à l'exterieur
+        
        <!-- rect x="0" y="0" width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" / -->
-           out of for each
-           <xsl:choose>
-           <xsl:when test="dyn:evaluate($xpath)">
-			          <xsl:for-each select="dyn:evaluate($xpath)">  je suis dans le corps de evaluate
-						</xsl:for-each>
-			</xsl:when>
-			
-			<xsl:otherwise>
-			<xsl:message terminate="yes">Unsupported XSLT processor.</xsl:message>
-			</xsl:otherwise>
-			</xsl:when>
-			
-			</xsl:choose>
-           <!-- <rect x="{@x}" y="{@y}" width="30" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /> -->
  
+    
        
-       <rect x="0" y="0" width="10" height="10" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
     
     </svg>
     
