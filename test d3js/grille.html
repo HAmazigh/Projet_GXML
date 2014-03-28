@@ -88,17 +88,15 @@
                 _r = 4,
                 _width=600, _height=600;
             var hasClicked = false;
-            var pos=[], posNew=[];   
+            var pos=[], posNew=[]; 
             
-       
-			var cle = new Object();
+            var cle = new Object();
                 cle.x1 = "x1";
                 cle.y1 = "y1";
                 cle.x2 = "x2";
                 cle.y2 = "y2";
-                
-             var cordo_ensemble = []  ;
-                
+            var cordo_ensemble = [];
+
             var scene = d3.select("body #content")
                 .append("svg")
                 .attr("width", _width)
@@ -168,8 +166,7 @@
             }
             
             function generateJSON(pos, posNew){
-      
-				//les coordonnée d'une ligne x1 y1 et x2 y2
+                //les coordonnée d'une ligne x1 y1 et x2 y2
                 var cordo = new Object();
                 cordo.x1 = ""+pos[0]+"";
                 cordo.y1 = ""+pos[1]+"";
@@ -182,9 +179,21 @@
                 //génération de l'ensembles des coordonées en format JSON
                 var jsonText = JSON.stringify(cordo_ensemble, cle, "\t");
 
-				//OUTPUT
+                //OUTPUT
+                console.clear();
                 console.log(jsonText);
-                
+               
+               
+               // Local Storage ..
+               if (typeof(Storage) != "undefined"){
+                // Store
+                localStorage.setItem("chaineJson", jsonText);
+                // Retrieve
+                console.log('LocalStorage Content >: '+localStorage.getItem("chaineJson"));
+                }
+                else{
+                 console.log("Sorry, your browser does not support Web Storage...");
+                }
             }
             
             $(function() {
