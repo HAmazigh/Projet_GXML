@@ -90,9 +90,15 @@
             var hasClicked = false;
             var pos=[], posNew=[];   
             
-            var Json="[{";
-            var Lignes=[];
-
+       
+			var cle = new Object();
+                cle.x1 = "x1";
+                cle.y1 = "y1";
+                cle.x2 = "x2";
+                cle.y2 = "y2";
+                
+             var cordo_ensemble = []  ;
+                
             var scene = d3.select("body #content")
                 .append("svg")
                 .attr("width", _width)
@@ -162,14 +168,23 @@
             }
             
             function generateJSON(pos, posNew){
-                var _json = "";
-                _json = "{x1: "+pos[0]+", y1:"+pos[1]+","+
-                        "x2: "+posNew[0]+", y1: "+posNew[1]+"}";
+      
+				//les coordonnée d'une ligne x1 y1 et x2 y2
+                var cordo = new Object();
+                cordo.x1 = ""+pos[0]+"";
+                cordo.y1 = ""+pos[1]+"";
+                cordo.x2 = ""+posNew[0]+"";
+                cordo.y2 = ""+posNew[1]+"";
                     
-               Lignes.push(_json);
-                    
-                Json += _json+"}]";
-                console.log(JSON.stringify( Lignes[0]  ));
+                //empiler les nouvelles coordonées de la ligne à l'ensemble des lignes          
+                cordo_ensemble.push(cordo);
+                
+                //génération de l'ensembles des coordonées en format JSON
+                var jsonText = JSON.stringify(cordo_ensemble, cle, "\t");
+
+				//OUTPUT
+                console.log(jsonText);
+                
             }
             
             $(function() {
