@@ -87,13 +87,12 @@
             var dataset = [],
                 i = 0,j=0,
                 dx=20, dy=20,
-                _r = 4,
+                _r = 4, numMur=0,
                 _width=600, _height=600;
             var hasClicked = false, isMarked = false;
+            var marker_type, marker_src;
             var pos=[], posNew=[]; 
-            var marker = new Object();
-            marker.type = ""; marker.src="";
-            
+            var listeMarkers = [];
             var cle = new Object();
                 cle.x1 = "x1";
                 cle.y1 = "y1";
@@ -152,6 +151,7 @@
                      .attr("x2", posNew[0])
                      .attr("y2", posNew[1])
                      .attr("class", 'mur draggable')
+                     .attr("num", numMur++)
                      .style("stroke", "black")
                      .style("stroke-width", 5)
                      .on("mouseover",  function(){d3.select(this).style("fill", "blue");})
@@ -167,24 +167,18 @@
                 //console.log("un click droit !");
                 //var numMur = d3.select(this).attr("num");
                 d3.select(this).remove();
+                removeRelatedMarker(d3.select(this).attr("num"));
                 
             }
             
-            function markManager(){
-                if( isMarked ){
-                    marker.pos = d3.mouse(this);
-                    console.log('marker position : '+marker.pos[0]);
-                    isMarked = false;
-                    
-                    scene.append("circle")
-                         .attr("cx", marker.pos[0] )
-                         .attr("cy", marker.pos[1] )
-                         .attr("r", _r)
-                         .style("stroke", "blue")
-                         .style("fill", "white")
-                         .on("mouseover", function(){ $('.tooltip').html('<img src="'+marker.source+'" width="62" height="62">').animate({left: (marker.pos[0]+9)+'px', top: (marker.pos[1]+9)+'px' ,opacity: 1}).css({display: 'block'}); })
-                         .on("mouseout", function(){ $('.tooltip').html('').css({display: 'none'}); });
+            function removeRelatedMarker(WallNum){
+                for(var k = 0; k<listeMarkers.length; k++){
+                    if( listeMarkers[k].ref == WallNum ){
+                        listeMarkers.splice(k,1);
+                        console.log('found !!');
+                    }
                 }
+                
             }
             
             function generateJSON(pos, posNew){
@@ -233,17 +227,42 @@
             // Mur : mur[{x1="44", y1="5", x2="56", y2="67", marqueurs[{ x="" y="" src="" }]}]
             $(function(){
                 $('a .draggable').click(function(){
-                 var type = $(this).attr('data-type');
-                 var source = $(this).attr('src');
-                 marker.type = type;
-                 marker.source = source;
-                 isMarked = true;
-                 
-                 console.log('marqueur : '+marker.type);
-                 console.log('marqueur : '+marker.source);
-                 
+                    var type = $(this).attr('data-type');
+                    var source = $(this).attr('src');
+                    marker_type = type;
+                    marker_src = source;
+                    isMarked = true;
                 });
             });
+            
+            function markManager(){
+                if( isMarked ){
+                    var marker = new Object();
+                    marker.type = marker_type;
+                    marker.source = marker_src;
+                    marker.pos = d3.mouse(this);
+                    marker.ref = d3.select(this).attr("num");
+                    console.log('marqueur type: '+marker.type);
+                    console.log('marqueur source: '+marker.source);
+                    console.log('marqueur pos x: '+marker.pos[0]);
+                    console.log('marqueur pos y: '+marker.pos[1]);
+                    console.log('marqueur ref: '+marker.ref);
+                    
+                    listeMarkers.push(marker);
+                    
+                    isMarked = false;
+                    
+                    scene.append("circle")
+                         .data(listeMarkers)
+                         .attr("cx", marker.pos[0] )
+                         .attr("cy", marker.pos[1] )
+                         .attr("r", _r)
+                         .style("stroke", "blue")
+                         .style("fill", "white")
+                         .on("mouseover", function(d,i){ $('.tooltip').html('<img src="'+marker.source+'" width="80" height="80">').animate({left: (marker.pos[0]+9)+'px', top: (marker.pos[1]+9)+'px' ,opacity: 1}).css({display: 'block'}); })
+                         .on("mouseout", function(){ $('.tooltip').html('').css({display: 'none'}); });
+                }
+            }
             
             /******
             var drag = d3.behavior.drag()
