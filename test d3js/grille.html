@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="three3d.html">3D</a></li>
             </ul>
             </div><!--/.nav-collapse -->
         </div>
@@ -43,9 +43,9 @@
             <div id="menu-accord">
                 <h3>Objets localisés</h3>
                 <div>
-                    <img class="flot-l" src="../assets/img/tex1.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex2.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex3.JPG" width="62" height="62" >
+                    <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex1.JPG" width="62" height="62" ></a>
+                    <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex2.JPG" width="62" height="62" ></a>
+                    <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex3.JPG" width="62" height="62" ></a>
                 </div>
                 
                 <h3>Meubles</h3>
@@ -78,6 +78,8 @@
                     <rect width="100%" height="100%" fill="url(#grid)" />
                 </svg>
             </div>
+            
+            <div class="tooltip thumbnail" ></div>
         </div>
             
 
@@ -87,8 +89,10 @@
                 dx=20, dy=20,
                 _r = 4,
                 _width=600, _height=600;
-            var hasClicked = false;
+            var hasClicked = false, isMarked = false;
             var pos=[], posNew=[]; 
+            var marker = new Object();
+            marker.type = ""; marker.src="";
             
             var cle = new Object();
                 cle.x1 = "x1";
@@ -147,22 +151,40 @@
                      .attr("y1", pos[1])
                      .attr("x2", posNew[0])
                      .attr("y2", posNew[1])
-                     .attr("class", 'mur')
+                     .attr("class", 'mur draggable')
                      .style("stroke", "black")
                      .style("stroke-width", 5)
                      .on("mouseover",  function(){d3.select(this).style("fill", "blue");})
                      .on("mouseout",  function(){d3.select(this).style("fill", "black");})
-                     .on("contextmenu", removeSelectedWall);
+                     .on("contextmenu", removeSelectedWall)
+                     .on("mousedown", markManager);
                      
                      generateJSON(pos, posNew);
             }
             
             function removeSelectedWall(){
                 d3.event.preventDefault();
-                console.log("un click droit !");
+                //console.log("un click droit !");
                 //var numMur = d3.select(this).attr("num");
                 d3.select(this).remove();
                 
+            }
+            
+            function markManager(){
+                if( isMarked ){
+                    marker.pos = d3.mouse(this);
+                    console.log('marker position : '+marker.pos[0]);
+                    isMarked = false;
+                    
+                    scene.append("circle")
+                         .attr("cx", marker.pos[0] )
+                         .attr("cy", marker.pos[1] )
+                         .attr("r", _r)
+                         .style("stroke", "blue")
+                         .style("fill", "white")
+                         .on("mouseover", function(){ $('.tooltip').html('<img src="'+marker.source+'" width="62" height="62">').animate({left: (marker.pos[0]+9)+'px', top: (marker.pos[1]+9)+'px' ,opacity: 1}).css({display: 'block'}); })
+                         .on("mouseout", function(){ $('.tooltip').html('').css({display: 'none'}); });
+                }
             }
             
             function generateJSON(pos, posNew){
@@ -205,6 +227,45 @@
                     console.log(' clic sur '+idMeuble);
                 });
             });
+            
+            
+            // -------- Partie : Marqueur (a completer avec Drag N drop )
+            // Mur : mur[{x1="44", y1="5", x2="56", y2="67", marqueurs[{ x="" y="" src="" }]}]
+            $(function(){
+                $('a .draggable').click(function(){
+                 var type = $(this).attr('data-type');
+                 var source = $(this).attr('src');
+                 marker.type = type;
+                 marker.source = source;
+                 isMarked = true;
+                 
+                 console.log('marqueur : '+marker.type);
+                 console.log('marqueur : '+marker.source);
+                 
+                });
+            });
+            
+            /******
+            var drag = d3.behavior.drag()
+                            .on("dragstart", function(){
+                                console.log(" Start DraG ! ");
+                            })
+                            .on("drag", move)
+                            .on("dragend", function(){
+                                console.log(" End drag, Sniff.. ");
+                            });
+            
+            d3.selectAll(".draggable").call(drag);
+            
+            function move(){
+                this.parentNode.appendChild(this);
+                var dragTarget = d3.select(this);
+                dragTarget
+                    .attr("cx", function(){return d3.event.dx + parseInt(dragTarget.attr("cx"))})
+                    .attr("cy", function(){return d3.event.dy + parseInt(dragTarget.attr("cy"))});
+            };
+            
+            *********/
             
         </script>
     </body>
