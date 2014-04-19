@@ -44,15 +44,15 @@
                 <h3>Objets localisés</h3>
                 <div>
                     <img class="flot-l" src="../assets/img/tex1.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex2.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex3.JPG" width="62" height="62" >
+                    <img class="flot-l" src="../assets/img/tex2.jpg" width="62" height="62" >
+                    <img class="flot-l" src="../assets/img/tex3.jpg" width="62" height="62" >
                 </div>
                 
                 <h3>Meubles</h3>
                 <div>
                     <a href="#"><img class="meubleListener flot-l" id="tex1" src="../assets/img/tex1.JPG" width="62" height="62" ></a>
-                    <a href="#"><img class="meubleListener flot-l" id="tex2" src="../assets/img/tex2.JPG" width="62" height="62" ></a>
-                    <a href="#"><img class="meubleListener flot-l" id="tex3" src="../assets/img/tex3.JPG" width="62" height="62" ></a>
+                    <a href="#"><img class="meubleListener flot-l" id="tex2" src="../assets/img/tex2.jpg" width="62" height="62" ></a>
+                    <a href="#"><img class="meubleListener flot-l" id="tex3" src="../assets/img/tex3.jpg" width="62" height="62" ></a>
                 </div>
             </div>    
             <div id="search" >
@@ -85,7 +85,7 @@
             var dataset = [],
                 i = 0,j=0,
                 dx=20, dy=20,
-                _r = 4,
+                _r = 5,
                 _width=600, _height=600;
             var hasClicked = false;
             var pos=[], posNew=[];   
@@ -168,7 +168,12 @@
             }
             
             function generateJSON(pos, posNew){
-      
+				
+				//<----------Remarque
+				//Un problèle lorsqu'on veut supprimer une ligne, donc les coordonées restent toujours dans la memoire de la variable 'cordo'
+				//---------->
+				
+				
 				//les coordonnée d'une ligne x1 y1 et x2 y2
                 var cordo = new Object();
                 cordo.x1 = ""+pos[0]+"";
