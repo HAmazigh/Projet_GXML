@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Three JS Tests! </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <style>
+            canvas{position: fixed; top:0; left:0;}
+        </style>
+        
+    </head>
+    <body>
+        
+        <div id="container">
+            
+        </div>
+        <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+        
+        <script type="text/javascript">
+
+            var _width = window.innerWidth;
+            var _height = window.innerHeight;
+            // moteur de rendu
+            var renderer = new THREE.WebGLRenderer({antialias: true});
+            renderer.setSize(_width, _height);
+            
+            $('#container').append(renderer.domElement);
+            
+
+
+      //  "x1": "84",
+      //  "y1": "105",
+      //  "x2": "285",
+      //  "y2": "104" 
+
+      var x1=84; var x2=285; var y1=105; var y2=104;
+
+        var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
+        var largeur = 7;
+        var hauteur = 70; 
+
+            // la scene
+            var scene = new THREE.Scene;
+            // le cube  (mur)
+                            //THREE.CubeGeometry(Longueur, Hauteur, Largeur)
+            var ligneGeo = new THREE.CubeGeometry(500, 1, 1);
+            var cubeGeo = new THREE.CubeGeometry(400, 70, 10);
+            
+            var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xff0000,wireframe:true});
+            
+                var cubeMaterialAbscisse = new THREE.MeshBasicMaterial({color: 0xff0000,wireframe:true});
+                var cubeMaterialOrdonee = new THREE.MeshBasicMaterial({color: 0xfff000,wireframe:true});
+                var cubeMaterialAxeZ = new THREE.MeshBasicMaterial({color: 0x1560bd,wireframe:true});
+
+            var cube = new THREE.Mesh(cubeGeo, cubeMaterial);
+            var abscisse = new THREE.Mesh(ligneGeo, cubeMaterialAbscisse);
+            var ordonnee = new THREE.Mesh(ligneGeo, cubeMaterialOrdonee);
+            var axeZ = new THREE.Mesh(ligneGeo, cubeMaterialAxeZ);
+
+            ordonnee.rotation.y = Math.PI * 90 / 180;
+            abscisse.rotation.y = Math.PI * 0 / 180;
+            axeZ.rotation.y = Math.PI * 45 / 180;
+
+
+            scene.add(abscisse);
+            scene.add(ordonnee);
+            scene.add(axeZ);
+
+            //Camera FOV de 45°
+            var camera = new THREE.PerspectiveCamera(1000, _width / _height, 0.1, 10000);
+            // move camera back 'z' and up 'y'
+            camera.position.y = 200 ;
+            camera.position.z = 400;
+ 
+            scene.add(camera);
+            
+            // Show!
+    
+              animate();
+                      camera.lookAt(cubeMaterialAxeZ.position);
+            //renderer.render(scene, camera);
+          
+            //fonction pour faire bouger l'objet
+            function animate(){
+				requestAnimationFrame (animate);
+				cube.rotation.y += 0.009;
+				renderer.render(scene, camera);
+				
+			}
+			
+			
+        </script>
+    </body>
+</html>

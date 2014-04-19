@@ -43,15 +43,10 @@
             <div id="menu-accord">
                 <h3>Objets localisés</h3>
                 <div>
-<<<<<<< HEAD
-                    <img class="flot-l" src="../assets/img/tex1.JPG" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex2.jpg" width="62" height="62" >
-                    <img class="flot-l" src="../assets/img/tex3.jpg" width="62" height="62" >
-=======
+
                     <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex1.JPG" width="62" height="62" ></a>
                     <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex2.JPG" width="62" height="62" ></a>
                     <a href="#"><img data-type="ObjetLocalise" class="flot-l draggable" src="../assets/img/tex3.JPG" width="62" height="62" ></a>
->>>>>>> 05ec3456a1f9d07d742d41589d179409e75e3895
                 </div>
                 
                 <h3>Meubles</h3>
@@ -64,7 +59,7 @@
             <div id="search" >
                 <h3>Formulaire de recherche</h3>
                 <div>
-                    <iframe src="http://localhost/XSL/Projet/donnee.old.xml"></iframe>
+                    <iframe src="http://localhost/GalaxieXml/Projet_GXML/donnee.old.xml"></iframe>
                 </div>
             </div>
         </div>
@@ -93,21 +88,32 @@
             var dataset = [],
                 i = 0,j=0,
                 dx=20, dy=20,
-<<<<<<< HEAD
-                _r = 5,
-=======
+
                 _r = 4, numMur=0,
->>>>>>> 05ec3456a1f9d07d742d41589d179409e75e3895
+
                 _width=600, _height=600;
             var hasClicked = false, isMarked = false;
             var marker_type, marker_src;
+            var marker = new Object();
+            //<---------------------------------------------Pour tester l'affichage du marqueur
+                    marker.type = "typeMar";
+                    marker.source = "sourceMar";
+                    marker.x = "positio x";
+                    marker.y = "position y";
+                    marker.ref = "attMar";
+            //------------------------------------------------------------------------------>
             var pos=[], posNew=[]; 
             var listeMarkers = [];
+
+            //<---------------------------------------------------------------------------------
             var cle = new Object();
                 cle.x1 = "x1";
                 cle.y1 = "y1";
                 cle.x2 = "x2";
                 cle.y2 = "y2";
+                cle.marqueurs = "marqueurs";
+            //--------------------------------------------------------------------------------->
+
             var cordo_ensemble = [];
 
             var scene = d3.select("body #content")
@@ -192,28 +198,20 @@
             }
             
             function generateJSON(pos, posNew){
-<<<<<<< HEAD
-				
-				//<----------Remarque
-				//Un problèle lorsqu'on veut supprimer une ligne, donc les coordonées restent toujours dans la memoire de la variable 'cordo'
-				//---------->
-				
-				
-				//les coordonnée d'une ligne x1 y1 et x2 y2
-=======
+
                 //les coordonnée d'une ligne x1 y1 et x2 y2
->>>>>>> 05ec3456a1f9d07d742d41589d179409e75e3895
                 var cordo = new Object();
                 cordo.x1 = ""+pos[0]+"";
                 cordo.y1 = ""+pos[1]+"";
                 cordo.x2 = ""+posNew[0]+"";
                 cordo.y2 = ""+posNew[1]+"";
-                    
+                cordo.marqueurs = marker;   
+                        
                 //empiler les nouvelles coordonées de la ligne à l'ensemble des lignes          
                 cordo_ensemble.push(cordo);
                 
                 //génération de l'ensembles des coordonées en format JSON
-                var jsonText = JSON.stringify(cordo_ensemble, cle, "\t");
+                var jsonText = JSON.stringify(cordo_ensemble, cle, '\t');
 
                 //OUTPUT
                 console.clear();
@@ -254,10 +252,12 @@
                     isMarked = true;
                 });
             });
-            
+
+          
+
             function markManager(){
                 if( isMarked ){
-                    var marker = new Object();
+                    
                     marker.type = marker_type;
                     marker.source = marker_src;
                     marker.pos = d3.mouse(this);
