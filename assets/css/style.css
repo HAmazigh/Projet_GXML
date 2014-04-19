@@ -17,7 +17,7 @@ line.mur{
     cursor: pointer;
 }
 
-svg circle:hover{cursor: crosshair;}
+svg circle:hover{cursor: default;}
 
 #zone-dessin{
     display: block;
@@ -34,4 +34,7 @@ svg circle:hover{cursor: crosshair;}
     position: relative;
     float: left;
     width: 700px;
+}
+.tooltip{
+    z-index: 2030;
 }
