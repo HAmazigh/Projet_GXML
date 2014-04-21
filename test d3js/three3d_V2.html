@@ -29,47 +29,142 @@
             
             $('#container').append(renderer.domElement);
 
+            var json = localStorage.getItem("chaineJson");
+             console.log("la chaine json"+json);
+
+            var jsonParse = JSON.parse(json);
+
+            var largeur = 50;
+            var hauteur = 300;
+           // console.log("la valeur de x est "+jsonParse[0].x1);
+           // console.log("la longueur du tableau est "+jsonParse.length);
+
+
+
             //La scene 
             var scene = new THREE.Scene;
-            console.log("Création de geometry");
+          
 
             //La géometrie
             var abGeometry = new THREE.CubeGeometry(10000, 1, 1);
             var orGeometry = new THREE.CubeGeometry(1, 10000, 1);
             var axGeometry = new THREE.CubeGeometry(1,1, 10000);
 
+            var murGeometry = new THREE.CubeGeometry(200, 300, 44);
 
             //Material 
             var abMaterial = new THREE.MeshBasicMaterial({color: 0xf0c300,wireframe:true});
             var orMaterial = new THREE.MeshBasicMaterial({color: 0x007fff,wireframe:true});
             var axMaterial = new THREE.MeshBasicMaterial({color: 0xff0000,wireframe:true});
 
-            console.log("Création dobjets");
+            var murMaterial = new THREE.MeshBasicMaterial( { color: 0x03C0ff, wireframe: false } );
+
 
             //les Objets
             var abscisse = new THREE.Mesh(abGeometry, abMaterial);
             var ordonnee = new THREE.Mesh(orGeometry, orMaterial);
             var axeZ = new THREE.Mesh(axGeometry, axMaterial);
+            var mur = new THREE.Mesh(murGeometry, murMaterial);
 
-                ordonnee.rotation.y = Math.PI * 180;
-                abscisse.rotation.y = Math.PI * 180;
+            //    ordonnee.rotation.y = Math.PI * 180;
+            //    abscisse.rotation.y = Math.PI * 180;
+
+                mur.rotation.x = Math.PI * 45 / 180;
+                mur.rotation.y = Math.PI * 180;
             
             scene.add(abscisse);
             scene.add(ordonnee);
             scene.add(axeZ);
+           // scene.add(mur);
 
 
-            //La camera
-            var camera = new THREE.PerspectiveCamera(1000, _width / _height, 0.1, 10000);
-            camera.position.x = 300;
-            camera.position.y = 300;
-            camera.position.z = 2000;
-
-            scene.add(camera);
+            for (i=0; i < jsonParse.length; i++){
+            //console.log("\n la valeur de x est "+jsonParse[i].x1);
+               var x1 = jsonParse[i].x1;
+                var x2 = jsonParse[i].x2;
+                var y1 = jsonParse[i].y1;
+                var y2 = jsonParse[i].y2;
+                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
 
                 
 
-            renderer.render(scene, camera);
+            //La géometry des murs 
+                var murGeometry = new THREE.CubeGeometry(longueur, hauteur, largeur);
+
+            //Material des murs
+                var murMaterial = new THREE.MeshBasicMaterial({color: 0x303030,wireframe:true});
+
+            //le mur
+                var mur = new THREE.Mesh(murGeometry, murMaterial);
+
+            scene.add(mur); 
+           }
+
+
+            //La camera
+            var camera = new THREE.PerspectiveCamera(450, _width / _height, 0.1, 10000);
+            camera.position.x = 300;
+            camera.position.y = 300;
+            camera.position.z = 500;
+
+            scene.add(camera);
+
+                camera.lookAt( mur.position );
+               // camera.position.set(200, 200, 500);
+              
+
+            window.addEventListener( 'keydown', onKeyDown, false );
+
+            function onKeyDown(event)
+            {
+                //currentlyPressedKeys[event.keyCode] = true;
+                var keyCode =  event.which;
+                switch (keyCode){
+
+                case 37 : {// Left cursor key
+                  camera.position.x -= 100;
+                console.log("la touche left "+keyCode);
+                } break;
+
+                case 38 : {// up cursor key
+                  camera.position.y += 100;
+                console.log("la touche up "+keyCode);
+                } break;
+
+                case 39 : {// right cursor key
+                  camera.position.x += 100;
+                console.log("la touche right "+keyCode);
+                }break;
+
+                case 40 : {// down cursor key
+                  camera.position.y -= 100;
+                console.log("la touche down "+keyCode);
+                }break;
+
+                case 65 : {// z cursor key
+                  camera.position.z += 100;
+                console.log("la touche Z "+keyCode);
+                }break;
+
+                case 90 : {// z cursor key
+                  camera.position.z -= 100;
+                console.log("la touche z "+keyCode);
+                }break;
+            
+            }   
+            }
+            animate();
+
+
+   function animate(){
+             requestAnimationFrame( animate );
+         //    mur.rotation.x += 0.01;
+         //      mur.rotation.y += 0.02;
+            renderer.render( scene, camera );
+    
+           }
+
+            
 
 
 
