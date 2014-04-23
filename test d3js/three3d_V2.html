@@ -34,8 +34,8 @@
 
             var jsonParse = JSON.parse(json);
 
-            var largeur = 50;
-            var hauteur = 300;
+            var largeur = 10;
+            var hauteur = 60;
            // console.log("la valeur de x est "+jsonParse[0].x1);
            // console.log("la longueur du tableau est "+jsonParse.length);
 
@@ -69,8 +69,7 @@
             //    ordonnee.rotation.y = Math.PI * 180;
             //    abscisse.rotation.y = Math.PI * 180;
 
-                mur.rotation.x = Math.PI * 45 / 180;
-                mur.rotation.y = Math.PI * 180;
+                
             
             scene.add(abscisse);
             scene.add(ordonnee);
@@ -78,26 +77,65 @@
            // scene.add(mur);
 
 
+
+                    //------------------------------> Création des murs à partir du fichier Json récuperé
             for (i=0; i < jsonParse.length; i++){
-            //console.log("\n la valeur de x est "+jsonParse[i].x1);
-               var x1 = jsonParse[i].x1;
-                var x2 = jsonParse[i].x2;
-                var y1 = jsonParse[i].y1;
-                var y2 = jsonParse[i].y2;
-                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
 
                 
+                var x1 = parseInt(jsonParse[i].x1);
+                var x2 = parseInt(jsonParse[i].x2);
+                var y1 = parseInt(jsonParse[i].y1);
+                var y2 = parseInt(jsonParse[i].y2);
+                var adjacent;
+                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
+                var angle ;
+                var pante;
+                var centre = [];
+
+                 centre [0] = (x1 + x2 ) / 2 ;
+                 centre [1] = (y1 + y2) / 2 ;
+
+                 //   console.log ("le centre est ! "+centre[0]+" centre y"+centre[1]+" la longeur "+longueur);
+                    
 
             //La géometry des murs 
-                var murGeometry = new THREE.CubeGeometry(longueur, hauteur, largeur);
+                var murGeometry = new THREE.CubeGeometry(longueur, largeur, hauteur);
 
             //Material des murs
-                var murMaterial = new THREE.MeshBasicMaterial({color: 0x303030,wireframe:true});
+                var murMaterial = new THREE.MeshBasicMaterial({color: 0xFF3030,wireframe:false});
 
             //le mur
                 var mur = new THREE.Mesh(murGeometry, murMaterial);
 
-            scene.add(mur); 
+            scene.add(mur);
+
+             mur.position.x = centre[0]; 
+             mur.position.y = centre[1];
+             mur.position.z = 0;
+
+             //mur.rotation.z = 40 ; 
+             adjacent = Math.sqrt(((x2-x1)*(x2-x1)));
+             //console.log("adjacent = "+ adjacent+"__ hypotinus= "+longueur);
+
+             angle = Math.acos(adjacent / longueur);
+             //console.log("l'angle est "+ angle+"°");
+
+             pante = (y2 - y1) / (x2 - x1);
+             console.log("la pante de cette droite est : "+pante);
+
+             if (pante < 0){
+             mur.rotation.z = -angle;
+         }else {
+            mur.rotation.z = angle;
+         }
+
+
+
+
+
+
+
+
            }
 
 
@@ -109,7 +147,7 @@
 
             scene.add(camera);
 
-                camera.lookAt( mur.position );
+                camera.lookAt( scene.position );
                // camera.position.set(200, 200, 500);
               
 
