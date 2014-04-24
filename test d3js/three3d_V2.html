@@ -5,7 +5,49 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <style>
+
+         #info {
+    animation-duration: 3s;
+    animation-name: slidein;
+                }
+  
+  @keyframes slidein {
+    from {
+      margin-left: 100%;
+      width: 300%
+       }
+    
+    to {
+      margin-left: 0%;
+      width: 100%;
+    }
+                     }
             canvas{position: fixed; top:0; left:0;}
+            #echelle{
+                position: fixed;
+                        }
+
+            #info{
+                position: fixed;
+                top: 700px;
+            }
+            h3{
+                color: white;
+                text-decoration: underline;
+            }
+            p {
+                color: white;
+            }
+            #r{
+                color: red;
+            }
+            #b{
+                color: blue;
+            }
+            #j{
+                color: yellow;
+            }
+            
         </style>
         
     </head>
@@ -34,15 +76,18 @@
 
             var jsonParse = JSON.parse(json);
 
-            var largeur = 50;
-            var hauteur = 300;
+            var largeur = 10;
+            var hauteur = 60;
            // console.log("la valeur de x est "+jsonParse[0].x1);
            // console.log("la longueur du tableau est "+jsonParse.length);
+           var scene = new THREE.Scene;
 
 
 
+           function init () {
+           
             //La scene 
-            var scene = new THREE.Scene;
+            
           
 
             //La géometrie
@@ -69,8 +114,7 @@
             //    ordonnee.rotation.y = Math.PI * 180;
             //    abscisse.rotation.y = Math.PI * 180;
 
-                mur.rotation.x = Math.PI * 45 / 180;
-                mur.rotation.y = Math.PI * 180;
+                
             
             scene.add(abscisse);
             scene.add(ordonnee);
@@ -78,40 +122,85 @@
            // scene.add(mur);
 
 
+
+       }
+
+           
+
+//-------------------------------------------------------------------------------------------------------
+//------------------------------> Création des murs à partir du fichier Json récuperé--------------------
+//-------------------------------------------------------------------------------------------------------
+
             for (i=0; i < jsonParse.length; i++){
-            //console.log("\n la valeur de x est "+jsonParse[i].x1);
-               var x1 = jsonParse[i].x1;
-                var x2 = jsonParse[i].x2;
-                var y1 = jsonParse[i].y1;
-                var y2 = jsonParse[i].y2;
-                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
 
                 
+                var x1 = parseInt(jsonParse[i].x1);
+                var x2 = parseInt(jsonParse[i].x2);
+                var y1 = parseInt(jsonParse[i].y1);
+                var y2 = parseInt(jsonParse[i].y2);
+                var adjacent;
+                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
+                var angle ;
+                var pante;
+                var centre = [];
+
+                 centre [0] = (x1 + x2 ) / 2 ;
+                 centre [1] = (y1 + y2) / 2 ;
+
+                 //   console.log ("le centre est ! "+centre[0]+" centre y"+centre[1]+" la longeur "+longueur);
+                    
 
             //La géometry des murs 
-                var murGeometry = new THREE.CubeGeometry(longueur, hauteur, largeur);
+                var murGeometry = new THREE.CubeGeometry(longueur, largeur, hauteur);
 
             //Material des murs
-                var murMaterial = new THREE.MeshBasicMaterial({color: 0x303030,wireframe:true});
+
+                var texture = new THREE.ImageUtils.loadTexture ('../assets/img/tex4.png');
+                var murMaterial = new THREE.MeshBasicMaterial({map: texture,wireframe:false});
 
             //le mur
                 var mur = new THREE.Mesh(murGeometry, murMaterial);
 
-            scene.add(mur); 
-           }
+            scene.add(mur);
 
+             mur.position.x = centre[0]; 
+             mur.position.y = centre[1];
+             mur.position.z = 0;
 
-            //La camera
+             //mur.rotation.z = 40 ; 
+             adjacent = Math.sqrt(((x2-x1)*(x2-x1)));
+             //console.log("adjacent = "+ adjacent+"__ hypotinus= "+longueur);
+
+             angle = Math.acos(adjacent / longueur);
+             //console.log("l'angle est "+ angle+"°");
+
+             pante = (y2 - y1) / (x2 - x1);
+           //  console.log("la pante de cette droite est : "+pante);
+
+             if (pante < 0){
+             mur.rotation.z = -angle;
+         }else {
+            mur.rotation.z = angle;
+         }
+      }
+
+//-------------------------------------------------------------------------------------------------------
+//-------------------------------------------------> Fin  -----------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+
+            
+                         //La camera
+
             var camera = new THREE.PerspectiveCamera(450, _width / _height, 0.1, 10000);
-            camera.position.x = 300;
+            camera.position.x = 00;
             camera.position.y = 300;
-            camera.position.z = 500;
+            camera.position.z = 400;
 
             scene.add(camera);
 
-                camera.lookAt( mur.position );
+                camera.lookAt( scene.position );
                // camera.position.set(200, 200, 500);
-              
+
 
             window.addEventListener( 'keydown', onKeyDown, false );
 
@@ -123,36 +212,38 @@
 
                 case 37 : {// Left cursor key
                   camera.position.x -= 100;
-                console.log("la touche left "+keyCode);
+          //      console.log("la touche left "+keyCode);
                 } break;
 
                 case 38 : {// up cursor key
                   camera.position.y += 100;
-                console.log("la touche up "+keyCode);
+           //     console.log("la touche up "+keyCode);
                 } break;
 
                 case 39 : {// right cursor key
                   camera.position.x += 100;
-                console.log("la touche right "+keyCode);
+           //     console.log("la touche right "+keyCode);
                 }break;
 
                 case 40 : {// down cursor key
                   camera.position.y -= 100;
-                console.log("la touche down "+keyCode);
+           //     console.log("la touche down "+keyCode);
                 }break;
 
                 case 65 : {// z cursor key
                   camera.position.z += 100;
-                console.log("la touche Z "+keyCode);
+           //     console.log("la touche Z "+keyCode);
                 }break;
 
-                case 90 : {// z cursor key
+                case 90 :{// z cursor key
                   camera.position.z -= 100;
-                console.log("la touche z "+keyCode);
+           //     console.log("la touche z "+keyCode);
                 }break;
             
             }   
             }
+
+            init();
             animate();
 
 
@@ -166,15 +257,21 @@
 
             
 
-
-
-
-
-
         </script>
 
+<div id="echelle">
+<h3> L'échelle  (x,y,z) </h3>
+    <p id="j"> Le Jaune c'est les Abscisses x </p>
+    <p id="b"> Le bleu c'est les Ordonnées y</p>
+    <p id="r"> Le rouge c'est pour l'axe des Z </p> 
+</div>
 
-
+<div id="info">
+    <p>
+Utilisez les fléches de direction pour se déplacer sur l'axe X ou Y <br>
+Les deux touches 'A' et 'Z' pour se déplacer sur l'axe Z
+    </p>
+</div>
 
     </body>
 </html>
