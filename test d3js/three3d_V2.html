@@ -64,6 +64,7 @@
 
             var _width = window.innerWidth;
             var _height = window.innerHeight;
+            var controls;
             // moteur de rendu
             var renderer = new THREE.WebGLRenderer({antialias: true});
 
@@ -182,6 +183,21 @@
          }else {
             mur.rotation.z = angle;
          }
+         
+         
+         // Carema 
+         
+            camera = new THREE.PerspectiveCamera(450, _width / _height, 0.1, 10000);
+            
+            camera.position.x = 00;
+            camera.position.y = 300;
+            camera.position.z = 400;
+
+            scene.add(camera);
+
+            camera.lookAt( scene.position );
+            //camera.position.set(0, 0, 500);
+            
       }
 
 //-------------------------------------------------------------------------------------------------------
@@ -191,15 +207,7 @@
             
                          //La camera
 
-            var camera = new THREE.PerspectiveCamera(450, _width / _height, 0.1, 10000);
-            camera.position.x = 00;
-            camera.position.y = 300;
-            camera.position.z = 400;
-
-            scene.add(camera);
-
-                camera.lookAt( scene.position );
-               // camera.position.set(200, 200, 500);
+          
 
 
             window.addEventListener( 'keydown', onKeyDown, false );
@@ -211,37 +219,45 @@
                 switch (keyCode){
 
                 case 37 : {// Left cursor key
-                  camera.position.x -= 100;
+                  //camera.rotateX -= 10;
+                  camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degInRad(1));
           //      console.log("la touche left "+keyCode);
                 } break;
 
                 case 38 : {// up cursor key
-                  camera.position.y += 100;
+                  //camera.position.y += 10;
+                  camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degInRad(1));
            //     console.log("la touche up "+keyCode);
                 } break;
 
                 case 39 : {// right cursor key
-                  camera.position.x += 100;
+                  //camera.rotateX += 10;
+                  camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degInRad(-1));
            //     console.log("la touche right "+keyCode);
                 }break;
 
                 case 40 : {// down cursor key
-                  camera.position.y -= 100;
+                  //camera.position.y -= 10;
+                  camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degInRad(-1));
            //     console.log("la touche down "+keyCode);
                 }break;
 
                 case 65 : {// z cursor key
-                  camera.position.z += 100;
+                  camera.position.z += 10;
            //     console.log("la touche Z "+keyCode);
                 }break;
 
                 case 90 :{// z cursor key
-                  camera.position.z -= 100;
+                  camera.position.z -= 10;
            //     console.log("la touche z "+keyCode);
                 }break;
             
             }   
             }
+            
+            function degInRad(deg) {
+                return deg * Math.PI / 180;
+            } 
 
             init();
             animate();
