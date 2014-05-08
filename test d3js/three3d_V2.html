@@ -1,293 +1,250 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Three JS Tests! </title>
+        <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
-        <style>
-
-         #info {
-    animation-duration: 3s;
-    animation-name: slidein;
-                }
-  
-  @keyframes slidein {
-    from {
-      margin-left: 100%;
-      width: 300%
-       }
-    
-    to {
-      margin-left: 0%;
-      width: 100%;
-    }
-                     }
-            canvas{position: fixed; top:0; left:0;}
-            #echelle{
-                position: fixed;
-                        }
-
-            #info{
-                position: fixed;
-                top: 700px;
-            }
-            h3{
-                color: white;
-                text-decoration: underline;
-            }
-            p {
-                color: white;
-            }
-            #r{
-                color: red;
-            }
-            #b{
-                color: blue;
-            }
-            #j{
-                color: yellow;
-            }
-            
-        </style>
-        
+        <link rel="stylesheet" href="../assets/css/style.css">
     </head>
     <body>
+        <script src="http://threejs.org/build/three.min.js"></script>
+        <script src="http://threejs.org/examples/js/controls/PointerLockControls.js"></script>
         
-        <div id="container">
+        <div id="blocker">
+            
+            <div id="instructions">
+                <span style="font-size:40px">Clic pour commencer !</span>
+                <br />
+                (W, A, S, D = Move, SPACE = Saut, MOUSE = Look around)
+            </div>
             
         </div>
-        <script src="//code.jquery.com/jquery-1.9.1.js"></script>
-        <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
-        
         <script type="text/javascript">
-
-
-            var _width = window.innerWidth;
-            var _height = window.innerHeight;
+            var camera, scene, renderer;
+            var geometry, material, mesh;
             var controls;
-            // moteur de rendu
-            var renderer = new THREE.WebGLRenderer({antialias: true});
-
-            renderer.setSize(_width, _height);
             
-            $('#container').append(renderer.domElement);
-
-            var json = localStorage.getItem("chaineJson");
-             console.log("la chaine json"+json);
-
-            var jsonParse = JSON.parse(json);
-
-            var largeur = 10;
-            var hauteur = 60;
-           // console.log("la valeur de x est "+jsonParse[0].x1);
-           // console.log("la longueur du tableau est "+jsonParse.length);
-           var scene = new THREE.Scene;
-
-
-
-           function init () {
-           
-            //La scene 
+            var objects = [];
             
-          
-
-            //La géometrie
-            var abGeometry = new THREE.CubeGeometry(10000, 1, 1);
-            var orGeometry = new THREE.CubeGeometry(1, 10000, 1);
-            var axGeometry = new THREE.CubeGeometry(1,1, 10000);
-
-            var murGeometry = new THREE.CubeGeometry(200, 300, 44);
-
-            //Material 
-            var abMaterial = new THREE.MeshBasicMaterial({color: 0xf0c300,wireframe:true});
-            var orMaterial = new THREE.MeshBasicMaterial({color: 0x007fff,wireframe:true});
-            var axMaterial = new THREE.MeshBasicMaterial({color: 0xff0000,wireframe:true});
-
-            var murMaterial = new THREE.MeshBasicMaterial( { color: 0x03C0ff, wireframe: false } );
-
-
-            //les Objets
-            var abscisse = new THREE.Mesh(abGeometry, abMaterial);
-            var ordonnee = new THREE.Mesh(orGeometry, orMaterial);
-            var axeZ = new THREE.Mesh(axGeometry, axMaterial);
-            var mur = new THREE.Mesh(murGeometry, murMaterial);
-
-            //    ordonnee.rotation.y = Math.PI * 180;
-            //    abscisse.rotation.y = Math.PI * 180;
-
+            var ray;
+            // ++++++++++++++++++++++++++++++++++++++++++
+            
+            
+            var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+            
+            if( havePointerLock ){
+                var element = document.body;
                 
-            
-            scene.add(abscisse);
-            scene.add(ordonnee);
-            scene.add(axeZ);
-           // scene.add(mur);
+                var pointerlockchange = function ( event ) {    
+                    if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+                        controls.enabled = true;
+                        blocker.style.display = 'none';
+                    }
+                    else {
+                        controls.enabled = false;
+                        
+                        blocker.style.display = '-webkit-box';
+                        blocker.style.display = '-moz-box';
+                        blocker.style.display = 'box';
+                        
+                        instructions.style.display = '';
+                    }
+                }
+                var pointerlockerror = function ( event ) {
+                        instructions.style.display = '';
+                }
+               // ------------- ecouter les events
+                document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+                document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+                document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
 
-
-
-       }
-
-           
-
-//-------------------------------------------------------------------------------------------------------
-//------------------------------> Création des murs à partir du fichier Json récuperé--------------------
-//-------------------------------------------------------------------------------------------------------
-
-            for (i=0; i < jsonParse.length; i++){
-
+                document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+                document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+                document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
                 
-                var x1 = parseInt(jsonParse[i].x1);
-                var x2 = parseInt(jsonParse[i].x2);
-                var y1 = parseInt(jsonParse[i].y1);
-                var y2 = parseInt(jsonParse[i].y2);
-                var adjacent;
-                var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
-                var angle ;
-                var pante;
-                var centre = [];
-
-                 centre [0] = (x1 + x2 ) / 2 ;
-                 centre [1] = (y1 + y2) / 2 ;
-
-                 //   console.log ("le centre est ! "+centre[0]+" centre y"+centre[1]+" la longeur "+longueur);
+                instructions.addEventListener( 'click', function ( event ) {
+                
+                instructions.style.display = 'none';
+                
+                // Ask the browser to lock the pointer
+                element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+                
+                if ( /Firefox/i.test( navigator.userAgent ) ) {
                     
+                    var fullscreenchange = function ( event ) {
+                        
+                        if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+                            
+                            document.removeEventListener( 'fullscreenchange', fullscreenchange );
+                            document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+                            
+                            element.requestPointerLock();
+                        }
+                        
+                    }
+                    
+                    document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+                    document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+                    
+                    element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+                    
+                    element.requestFullscreen();
+                    
+                } else {
+                    element.requestPointerLock();
+                    
+                }
+                
+            }, false );
 
-            //La géometry des murs 
-                var murGeometry = new THREE.CubeGeometry(longueur, largeur, hauteur);
-
-            //Material des murs
-
-                var texture = new THREE.ImageUtils.loadTexture ('../assets/img/tex4.png');
-                var murMaterial = new THREE.MeshBasicMaterial({map: texture,wireframe:false});
-
-            //le mur
-                var mur = new THREE.Mesh(murGeometry, murMaterial);
-
-            scene.add(mur);
-
-             mur.position.x = centre[0]; 
-             mur.position.y = centre[1];
-             mur.position.z = 0;
-
-             //mur.rotation.z = 40 ; 
-             adjacent = Math.sqrt(((x2-x1)*(x2-x1)));
-             //console.log("adjacent = "+ adjacent+"__ hypotinus= "+longueur);
-
-             angle = Math.acos(adjacent / longueur);
-             //console.log("l'angle est "+ angle+"°");
-
-             pante = (y2 - y1) / (x2 - x1);
-           //  console.log("la pante de cette droite est : "+pante);
-
-             if (pante < 0){
-             mur.rotation.z = -angle;
-         }else {
-            mur.rotation.z = angle;
-         }
-         
-         
-         // Carema 
-         
-            camera = new THREE.PerspectiveCamera(450, _width / _height, 0.1, 10000);
-            
-            camera.position.x = 00;
-            camera.position.y = 300;
-            camera.position.z = 400;
-
-            scene.add(camera);
-
-            camera.lookAt( scene.position );
-            //camera.position.set(0, 0, 500);
-            
-      }
-
-//-------------------------------------------------------------------------------------------------------
-//-------------------------------------------------> Fin  -----------------------------------------------
-//-------------------------------------------------------------------------------------------------------
-
-            
-                         //La camera
-
-          
-
-
-            window.addEventListener( 'keydown', onKeyDown, false );
-
-            function onKeyDown(event)
-            {
-                //currentlyPressedKeys[event.keyCode] = true;
-                var keyCode =  event.which;
-                switch (keyCode){
-
-                case 37 : {// Left cursor key
-                  //camera.rotateX -= 10;
-                  camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degInRad(1));
-          //      console.log("la touche left "+keyCode);
-                } break;
-
-                case 38 : {// up cursor key
-                  //camera.position.y += 10;
-                  camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degInRad(1));
-           //     console.log("la touche up "+keyCode);
-                } break;
-
-                case 39 : {// right cursor key
-                  //camera.rotateX += 10;
-                  camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degInRad(-1));
-           //     console.log("la touche right "+keyCode);
-                }break;
-
-                case 40 : {// down cursor key
-                  //camera.position.y -= 10;
-                  camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degInRad(-1));
-           //     console.log("la touche down "+keyCode);
-                }break;
-
-                case 65 : {// z cursor key
-                  camera.position.z += 10;
-           //     console.log("la touche Z "+keyCode);
-                }break;
-
-                case 90 :{// z cursor key
-                  camera.position.z -= 10;
-           //     console.log("la touche z "+keyCode);
-                }break;
-            
-            }   
+               
+               
             }
+            else{
+                instructions.innerHTML = 'Navigateur ne suppote pas Pointer Lock API !';
+            }
+            // ---- fin if(havePoiterLock..)
             
-            function degInRad(deg) {
-                return deg * Math.PI / 180;
-            } 
-
             init();
             animate();
-
-
-   function animate(){
-             requestAnimationFrame( animate );
-         //    mur.rotation.x += 0.01;
-         //      mur.rotation.y += 0.02;
-            renderer.render( scene, camera );
-    
-           }
-
             
+            function init(){
+                camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+    
+                scene = new THREE.Scene();
+                scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+                
+                var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
+                light.position.set( 1, 1, 1 );
+                scene.add( light );
+                
+                controls = new THREE.PointerLockControls( camera );
+                scene.add( controls.getObject() );
+                
+                ray = new THREE.Raycaster();
+                ray.ray.direction.set( 0, -1, 0 );
+                
+                // Sol ..
+                geometry = new THREE.PlaneGeometry(2000, 2000);
+                geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+                
+               /* for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+                    
+                    var vertex = geometry.vertices[ i ];
+                    vertex.x += Math.random() * 20 - 10;
+                    vertex.y += Math.random() * 2;
+                    vertex.z += Math.random() * 20 - 10;
+                    
+                }*/
+                
+                var texture = new THREE.ImageUtils.loadTexture ('../assets/img/floor.jpg');
+                material = new THREE.MeshBasicMaterial( {map: texture,wireframe:false} );
+                
+                mesh = new THREE.Mesh( geometry, material );
+                scene.add( mesh );
+                
+                /****    ici Code pour positionne les murs et les objets localisé ;)  ****/
+                drawWall();
+                /*************************************************************************/
+                
+                //
+                renderer = new THREE.WebGLRenderer();
+                renderer.setClearColor( 0xffffff );
+                renderer.setSize( window.innerWidth, window.innerHeight );
 
+                document.body.appendChild( renderer.domElement );
+                //
+                
+            }
+            function animate(){
+                requestAnimationFrame( animate );
+                
+                controls.isOnObject( false );
+
+                ray.ray.origin.copy( controls.getObject().position );
+                ray.ray.origin.y -= 10;
+                
+                var intersections = ray.intersectObjects( objects );
+                
+                if ( intersections.length > 0 ) {
+                    
+                    var distance = intersections[ 0 ].distance;
+                    
+                    if ( distance > 0 && distance < 10 ) {
+                        
+                        controls.isOnObject( true );
+                        
+                    }
+                    
+                }
+                
+                controls.update();
+                
+                renderer.render( scene, camera );
+                
+            }
+            
+            function drawWall(){
+                var json = localStorage.getItem("chaineJson");
+                console.log("la chaine json"+json);
+
+                var jsonParse = JSON.parse(json);
+                var largeur = 10;
+                var hauteur = 60;
+                
+                for (i=0; i < jsonParse.length; i++){
+            
+                    var x1 = parseInt(jsonParse[i].x1);
+                    var x2 = parseInt(jsonParse[i].x2);
+                    var y1 = parseInt(jsonParse[i].y1);
+                    var y2 = parseInt(jsonParse[i].y2);
+                    var adjacent;
+                    var longueur = Math.sqrt(((x2-x1)*(x2-x1)) + ((y2-y1)*(y2-y1)));
+                    var angle ;
+                    var pante;
+                    var centre = [];
+
+                    centre [0] = (x1 + x2 ) / 2 ;
+                    centre [1] = (y1 + y2) / 2 ;
+
+                    //   console.log ("le centre est ! "+centre[0]+" centre y"+centre[1]+" la longeur "+longueur);
+
+
+                    //La géometry des murs 
+                    var murGeometry = new THREE.CubeGeometry(longueur, largeur, hauteur);
+
+                    //Material des murs
+
+                    var texture = new THREE.ImageUtils.loadTexture ('../assets/img/tex4.png');
+                    var murMaterial = new THREE.MeshBasicMaterial({map: texture,wireframe:false});
+
+                    //le mur
+                    var mur = new THREE.Mesh(murGeometry, murMaterial);
+
+                    scene.add(mur);
+
+                    mur.position.x = centre[0]; 
+                    mur.position.y = centre[1];
+                    mur.position.z = 0;
+
+                    //mur.rotation.z = 40 ; 
+                    adjacent = Math.sqrt(((x2-x1)*(x2-x1)));
+                    //console.log("adjacent = "+ adjacent+"__ hypotinus= "+longueur);
+
+                    angle = Math.acos(adjacent / longueur);
+                    //console.log("l'angle est "+ angle+"°");
+
+                    pante = (y2 - y1) / (x2 - x1);
+                    //  console.log("la pante de cette droite est : "+pante);
+
+                    if (pante < 0){
+                        mur.rotation.z = -angle;
+                    }else {
+                        mur.rotation.z = angle;
+                    }
+
+                }
+            }
         </script>
-
-<div id="echelle">
-<h3> L'échelle  (x,y,z) </h3>
-    <p id="j"> Le Jaune c'est les Abscisses x </p>
-    <p id="b"> Le bleu c'est les Ordonnées y</p>
-    <p id="r"> Le rouge c'est pour l'axe des Z </p> 
-</div>
-
-<div id="info">
-    <p>
-Utilisez les fléches de direction pour se déplacer sur l'axe X ou Y <br>
-Les deux touches 'A' et 'Z' pour se déplacer sur l'axe Z
-    </p>
-</div>
-
+        
     </body>
 </html>
