@@ -18,15 +18,16 @@
   <xsl:template match="*[not(preceding::node()[name()=name(current())])]">
     <xsl:variable name="balise" select="name()" />
     <xsl:for-each select="@*">
+        <xsl:if test="name() != 'x'"><xsl:if test="name() != 'y'"><xsl:if test="name() != 'num'">
       <xsl:variable name="attribut" select="name()"/>
       <xsl:variable name="nomliste" select="concat($balise,'-',$attribut)" />
       <xsl:value-of select="$nomliste" />
 
       <select name="{$nomliste}" >
-        <option> Tous </option>
         <xsl:apply-templates select="//*[name()=$balise]/@*[name()=$attribut]" />
       </select>
       <br/>
+      </xsl:if></xsl:if></xsl:if>
     </xsl:for-each>
   </xsl:template>
 

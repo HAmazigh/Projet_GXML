@@ -12,18 +12,18 @@
       </batiment>
 
       <batiment type="cours" num="5" >
-        <salle type="Amphi" num="5.1" x="10" y="20">
+        <salle nom="Amphi" num="5.1" x="10" y="20">
         </salle>
 
-        <salle type="salle" num="5.2" x="35" y="20">
+        <salle nom="salle" num="5.2" x="35" y="20">
         </salle>
       </batiment>
 
       <batiment type="TP/TD" num="6">
-        <salle type="Travaux Pratique" num="6.3" x="60" y="50">
+        <salle nom="Travaux Pratique" num="6.3" x="60" y="50">
         </salle>
 
-        <salle type="Travaux Dirigés" num="6.4" x="65" y="50">
+        <salle nom="Travaux Diriges" num="6.4" x="65" y="50">
         </salle>
 
       </batiment>
@@ -38,19 +38,19 @@
       </batiment>
 
       <batiment type="cours" num="5">
-        <salle type="Amphi" num="5.1" x="400" y="200">
+        <salle nom="Amphi" num="5.1" x="400" y="200">
         </salle>
 
-        <salle type="salle" num="5.2" x="440" y="200">
+        <salle nom="salle" num="5.2" x="440" y="200">
         </salle>
 
       </batiment>
 
       <batiment type="TP/TD" num="4">
-        <salle type="Travaux Pratique" num="4.02" x="500" y="500">
+        <salle nom="Travaux Pratique" num="4.02" x="500" y="500">
         </salle>
 
-        <salle type="Travaux Dirigés" num="4.03" x="540" y="500">
+        <salle nom="Travaux Dirigés" num="4.03" x="540" y="500">
         </salle>
 
       </batiment>
